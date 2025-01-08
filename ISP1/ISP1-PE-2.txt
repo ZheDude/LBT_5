@@ -54,9 +54,7 @@ neighbor 1.1.1.3 update-source lo0
 neighbor 1.1.1.1 remote-as 10
 neighbor 1.1.1.1 update-source lo0
 
-#Networks
+
 network 12.0.0.0 mask 255.255.255.252
 
 
-
-// Cust-A port unknown
