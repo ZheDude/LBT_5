@@ -72,7 +72,7 @@ route-target import 10:50
 
 int gig0/1
 ip vrf forwarding Cust-A
-ip add ...
+ip add 78.25.68.1 255.255.255.252
 
 router bgp 20
 #Networks
