@@ -1,0 +1,30 @@
+en
+conf t
+hostname Core-SW-4
+
+end
+en
+conf t
+ip domain name 5CN
+
+username cisco priv 15 algo scrypt secret cisco
+crypto key gen rsa mod 4096 usage
+ip ssh version 2
+
+line vty 0 15
+login local
+transport input ssh
+logging synch
+exec-timeout 0 0
+end
+en
+conf t
+
+
+int range g2/1-2
+switchport mode trunk
+channel-group 3 mode passive
+
+int range g1/0-1
+switchport mode trunk
+channel-group 4 mode passive
