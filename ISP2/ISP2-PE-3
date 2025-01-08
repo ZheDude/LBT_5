@@ -39,7 +39,7 @@ desc to CE-3
 no shut
 
 int g0/2
-ip add 43.21.5.1 255.255.255.252
+ip add 43.21.5.2 255.255.255.252
 desc to ISP2-PE-3
 no shut
 
@@ -95,3 +95,9 @@ neighbor PE1_PE2 update-source lo0
 address-family vpnv4
 neighbor PE1_PE2 activate
 neighbor PE1_PE2 send-community extended
+
+
+
+router bgp 20
+neighbor 43.21.5.1 remote-as 10
+neighbor 43.21.5.1 update-source g0/2

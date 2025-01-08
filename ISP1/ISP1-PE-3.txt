@@ -57,3 +57,8 @@ neighbor 1.1.1.1 update-source lo0
 
 #Networks
 network 43.21.5.0 mask 255.255.255.252
+
+
+router bgp 10
+neighbor 43.21.5.2 remote-as 20
+neighbor 43.21.5.2 update-source g0/2
