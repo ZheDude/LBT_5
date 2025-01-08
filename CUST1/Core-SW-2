@@ -21,13 +21,16 @@ en
 conf t
 
 int range g0/1-2
+switchport trunk encapsulation dot1q
 switchport mode trunk
 channel-group 2 mode passive
 
 int range g1/0-1
+switchport trunk encapsulation dot1q
 switchport mode trunk
 channel-group 4 mode active
 
 int range g2/0-1
+switchport trunk encapsulation dot1q
 switchport mode trunk
 channel-group 5 mode active
