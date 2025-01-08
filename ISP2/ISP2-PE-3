@@ -39,7 +39,7 @@ desc to CE-3
 no shut
 
 int g0/2
-ip add 43.21.5.1 255.255.255.252
+ip add 43.21.5.2 255.255.255.252
 desc to ISP2-PE-3
 no shut
 
@@ -62,3 +62,9 @@ neighbor 1.1.2.1 update-source lo0
 #Networks
 network 43.21.5.0 mask 255.255.255.252
 network 78.25.68.0 mask 255.255.255.252
+
+
+
+router bgp 20
+neighbor 43.21.5.1 remote-as 10
+neighbor 43.21.5.1 update-source g0/2
