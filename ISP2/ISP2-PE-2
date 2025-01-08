@@ -68,19 +68,11 @@ ip vrf forwarding Cust-A
 ip add 52.235.12.1 255.255.255.252
 
 router bgp 20
-no neighbor 1.1.2.3 remote-as 20
-no neighbor 1.1.2.3 update-source lo0
-
-no neighbor 1.1.2.1 remote-as 20
-no neighbor 1.1.2.1 update-source lo0
 no network 52.235.12.0 mask 255.255.255.252
 
-neighbor PE1_PE3 peer-group
-neighbor 1.1.2.1 peer-group PE1_PE3
-neighbor 1.1.2.3 peer-group PE1_PE3
-
-neighbor PE1_PE3 remote-as 20
-neighbor PE1_PE3 update-source lo0
 address-family vpnv4
-neighbor PE1_PE3 activate
-neighbor PE1_PE3 send-community extended
+neighbor 1.1.2.1 activate
+neighbor 1.1.2.3 activate
+
+neighbor 1.1.2.1 send-community extended
+neighbor 1.1.2.3 send-community extended

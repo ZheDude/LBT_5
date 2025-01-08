@@ -63,8 +63,8 @@ neighbor 1.1.2.1 update-source lo0
 network 43.21.5.0 mask 255.255.255.252
 network 78.25.68.0 mask 255.255.255.252
 
-
-
+# NEU
+# VRF configuration:
 ip vrf Cust-A
 rd 10:50
 route-target export 10:50
@@ -75,26 +75,16 @@ ip vrf forwarding Cust-A
 ip add ...
 
 router bgp 20
-no neighbor 1.1.2.2 remote-as 20
-no neighbor 1.1.2.2 update-source lo0
-
-no neighbor 1.1.2.1 remote-as 20
-no neighbor 1.1.2.1 update-source lo0
-
 #Networks
 no network 43.21.5.0 mask 255.255.255.252
 no network 78.25.68.0 mask 255.255.255.252
 
-
-neighbor PE1_PE2 peer-group
-neighbor 1.1.2.1 peer-group PE1_PE2
-neighbor 1.1.2.2 peer-group PE1_PE2
-
-neighbor PE1_PE2 remote-as 20
-neighbor PE1_PE2 update-source lo0
 address-family vpnv4
-neighbor PE1_PE2 activate
-neighbor PE1_PE2 send-community extended
+neighbor 1.1.2.2 activate
+neighbor 1.1.2.1 activate
+
+neighbor 1.1.2.2 send-community extended
+neighbor 1.1.2.1 send-community extended
 
 
 
