@@ -31,7 +31,7 @@ switchport trunk encapsulation dot1q
 switchport mode trunk
 channel-group 2 mode active
 
-int range g2/1-2
+int range g2/0-1
 switchport trunk encapsulation dot1q
 switchport mode trunk
 channel-group 3 mode active
