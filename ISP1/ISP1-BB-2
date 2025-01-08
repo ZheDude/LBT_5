@@ -1,0 +1,44 @@
+en
+conf t
+hostname ISP1-BB-2
+key chain OSPF
+key 1
+cryptographic-algorithm hmac-sha-512
+key-string cisco
+
+end
+conf t
+ip domain name 5CN
+
+username cisco priv 15 algo scrypt secret cisco
+crypto key gen rsa mod 4096 usage
+ip ssh version 2
+
+line vty 0 15
+login local
+transport input ssh
+logging synch
+exec-timeout 0 0
+end
+conf t
+
+int g0/0
+ip ospf authentication key-chain OSPF
+ip add 192.168.2.2 255.255.255.0
+desc to ISP1-PE-2
+no shut
+
+
+int g0/2
+ip ospf authentication key-chain OSPF
+ip ospf network point-to-multipoint
+ip add 192.168.4.2 255.255.255.0
+desc to ISP1-BB-SW
+no shut
+
+
+router ospf 1
+router-id 100.0.0.3
+network 192.168.2.0 0.0.0.255 area 0
+network 192.168.4.0 0.0.0.255 area 0
+mpls ldp autoconfig
