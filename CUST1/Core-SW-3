@@ -54,3 +54,5 @@ switchport private-vlan mapping 100 101
 interface GigabitEthernet3/3
 switchport mode private-vlan promiscuous
 switchport private-vlan mapping 100 101,102
+
+spanning tree mode rapid-pvst
