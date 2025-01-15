@@ -86,8 +86,9 @@ neighbor 1.1.2.1 activate
 neighbor 1.1.2.2 send-community extended
 neighbor 1.1.2.1 send-community extended
 
-
-
 router bgp 20
 neighbor 43.21.5.1 remote-as 10
 neighbor 43.21.5.1 update-source g0/2
+
+address-family ipv4 vrf Cust-A
+network 78.25.68.0 mask 255.255.255.252
