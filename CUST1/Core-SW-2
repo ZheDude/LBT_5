@@ -53,7 +53,7 @@ interface GigabitEthernet0/0
 switchport mode private-vlan promiscuous
 switchport private-vlan mapping 100 101,102
 
-spanning tree mode rapid-pvst
-spanning tree vlan 100 priority 8192
-spanning tree vlan 101 priority 4096
-spanning tree vlan 102 priority 8192
+spanning-tree mode rapid-pvst
+spanning-tree vlan 100 priority 8192
+spanning-tree vlan 101 priority 4096
+spanning-tree vlan 102 priority 8192

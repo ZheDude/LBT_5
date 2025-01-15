@@ -55,4 +55,4 @@ interface GigabitEthernet0/2
 switchport mode private-vlan host
 switchport private-vlan host-association 100 102
 
-spanning tree mode rapid-pvst
+spanning-tree mode rapid-pvst
