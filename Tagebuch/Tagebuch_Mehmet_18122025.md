@@ -1,7 +1,5 @@
-
 **Liebes Tagebuch**
 
-[[Netzplan.png]]
 # Tagesbericht
 
 ## 1. Tagesrückblick
@@ -23,7 +21,7 @@
 
 ## 3. Ausblick: Geplante Schritte
 * **Nächste Schritte und Prioritäten:**
-* Es wird weiter an dem Overlay Netz zischen den Sites gearbeitet
+* Es wird weiter an dem Overlay Netz zwischen den Sites gearbeitet
 * Konfiguration der internen Netze in den Sites 2 & 3
 
 ---
