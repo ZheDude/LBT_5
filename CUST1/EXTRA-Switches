@@ -1,0 +1,24 @@
+vlan 6969
+remote-span
+
+
+sw1: (statt 0/1 das interface wo alles kopiert werden soll)
+monitor session 1 source interface fastEthernet 0/1
+monitor session 1 destination remote vlan 6969
+
+sw2:(statt 0/1 das interface wo alles kopiert werden soll), statt 6969 was auch immer die vlan
+monitor session 1 source remote vlan 6969
+monitor session 1 destination interface fastEthernet 0/1
+
+
+
+dhcp snooping
+allah switches: 
+ip dhcp snooping
+
+
+# interface wo der dhcp server ist
+interface fa0/2
+ip dhcp snooping trust
+
+ip arp inspection 
