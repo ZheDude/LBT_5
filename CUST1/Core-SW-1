@@ -39,6 +39,7 @@ channel-group 3 mode active
 end
 en
 conf t
+vtp mode off
 vlan 100
 private-vlan primary
 private-vlan association 101
@@ -51,4 +52,4 @@ private-vlan isolated
 
 interface GigabitEthernet0/0
 switchport mode private-vlan promiscuous
-switchport private-vlan mapping 100 101
+switchport private-vlan mapping 100 101,102

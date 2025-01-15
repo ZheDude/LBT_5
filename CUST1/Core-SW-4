@@ -35,6 +35,7 @@ channel-group 4 mode passive
 end
 en
 conf t
+vtp mode off
 vlan 100
 private-vlan primary
 private-vlan association 101
