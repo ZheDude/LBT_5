@@ -59,3 +59,19 @@ spanning-tree mode rapid-pvst
 spanning-tree vlan 100 priority 4096
 spanning-tree vlan 101 priority 8192
 spanning-tree vlan 102 priority 4096
+
+
+spanning-tree loopguard default
+interface Port-channel1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+spanning-tree guard root 
+
+interface Port-channel2
+switchport trunk encapsulation dot1q
+switchport mode trunk
+
+interface Port-channel3
+switchport trunk encapsulation dot1q
+switchport mode trunk
+spanning-tree guard root 

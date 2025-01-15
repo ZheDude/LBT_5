@@ -56,3 +56,21 @@ switchport mode private-vlan host
 switchport private-vlan host-association 100 102
 
 spanning-tree mode rapid-pvst
+
+spanning-tree loopguard default
+
+spanning-tree loopguard default
+interface Port-channel3
+switchport trunk encapsulation dot1q
+switchport mode trunk
+
+spanning-tree loopguard default
+interface Port-channel4
+switchport trunk encapsulation dot1q
+switchport mode trunk
+
+int g0/0
+spanning-tree bpduguard enable
+
+int g0/2
+spanning-tree bpduguard enable
