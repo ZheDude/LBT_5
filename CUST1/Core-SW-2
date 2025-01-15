@@ -34,3 +34,20 @@ int range g2/0-1
 switchport trunk encapsulation dot1q
 switchport mode trunk
 channel-group 5 mode active
+
+end
+en
+conf t
+vlan 100
+private-vlan primary
+private-vlan association 101
+
+vlan 101
+private-vlan community
+
+vlan 102
+private-vlan isolated
+
+interface GigabitEthernet0/0
+switchport mode private-vlan promiscuous
+switchport private-vlan mapping 100 101
