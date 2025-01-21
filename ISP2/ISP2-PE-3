@@ -101,7 +101,8 @@ exit
 ip route 0.0.0.0 0.0.0.0 43.21.5.1
 
 # route leaking
-ip prefix-list INTERNET seq 10 permit 0.0.0.0/0
+ip prefix-list INTERNET seq 10 deny 12.0.0.0/30
+ip prefix-list INTERNET seq 20 permit 0.0.0.0/0
 
 route-map RM_INTERNET permit 10
 match ip address prefix-list INTERNET
@@ -109,3 +110,35 @@ exit
 
 ip vrf Cust-A
 import ipv4 unicast map RM_INTERNET
+
+
+
+# this option exposes the VRF to the global routing table so the eBGP can return the replies.
+ip prefix-list EXPORT_TO_GRT seq 10 permit 78.25.68.0/30
+ip prefix-list EXPORT_TO_GRT seq 20 permit 13.0.0.0/30
+ip prefix-list EXPORT_TO_GRT seq 30 permit 52.235.12.0/30
+
+route-map RM_EXPORT_TO_GRT permit 10
+match ip address prefix-list EXPORT_TO_GRT
+exit
+
+ip vrf Cust-A
+export ipv4 unicast map RM_EXPORT_TO_GRT
+
+# Alternatively you can use NAT:
+ip access-list extended Cust-A-To-Internet-NAT
+permit ip 78.25.68.0 0.0.0.3 any
+permit ip 13.0.0.0 0.0.0.3 any
+permit ip 52.235.12.0 0.0.0.3 any
+deny ip any any
+exit
+
+ip nat inside source list Cust-A-To-Internet-NAT interface g0/2 vrf Cust-A overload
+
+int g0/2
+ip nat outside
+exit
+
+int gig0/1
+ip nat inside
+exit
