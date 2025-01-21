@@ -92,3 +92,20 @@ neighbor 43.21.5.1 update-source g0/2
 
 address-family ipv4 vrf Cust-A
 network 78.25.68.0 mask 255.255.255.252
+exit
+address-family ipv4 
+network 78.25.68.0 mask 255.255.255.252
+exit
+exit
+
+ip route 0.0.0.0 0.0.0.0 43.21.5.1
+
+# route leaking
+ip prefix-list INTERNET seq 10 permit 0.0.0.0/0
+
+route-map RM_INTERNET permit 10
+match ip address prefix-list INTERNET
+exit
+
+ip vrf Cust-A
+import ipv4 unicast map RM_INTERNET
