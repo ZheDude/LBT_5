@@ -1,4 +1,4 @@
-Rename-Computer -NewName "WinBalikciS1" -Force -Restart
+Rename-Computer -NewName "DC1" -Force -Restart
 
 # Warten auf Neustart (manuelle Wiederaufnahme erforderlich)
 Write-Host "Neustart des Computers erforderlich. Bitte nach Neustart das Skript erneut ausführen."
@@ -24,3 +24,4 @@ Install-ADDSForest -DomainName $DomainName `
     -Force
 
 Rename-ADObject -Identity (Get-ADReplicationSite -Filter {Name -eq "Default-First-Site-Name"}).DistinguishedName -NewName "Standort1"
+
