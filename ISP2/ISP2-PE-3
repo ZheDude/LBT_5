@@ -142,3 +142,12 @@ exit
 int gig0/1
 ip nat inside
 exit
+
+int gig0/0
+ip nat inside
+exit
+
+no ip access-list extended Cust-A-To-Internet-NAT
+ip access-list extended Cust-A-To-Internet-NAT
+permit ip any any
+exit
