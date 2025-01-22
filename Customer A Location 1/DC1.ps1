@@ -23,5 +23,23 @@ Install-ADDSForest -DomainName $DomainName `
     -SafeModeAdministratorPassword $SafeModePassword `
     -Force
 
-Rename-ADObject -Identity (Get-ADReplicationSite -Filter {Name -eq "Default-First-Site-Name"}).DistinguishedName -NewName "Standort1"
 
+# Standort-Konfiguration
+$DefaultSiteName  = "Wien-HQ"
+Rename-ADObject -Identity (Get-ADReplicationSite -Filter {Name -eq "Default-First-Site-Name"}).DistinguishedName -NewName $DefaultSiteName
+## Erstellung: Standort 2
+$SiteName = "Linz-Office"
+$SiteLinkName = "SiteLink-Wien-HQ-Linz-Office"
+# Erstellen des neuen Standorts
+New-ADReplicationSite -Name $SiteName
+# Erstellen der SiteLinks
+New-ADReplicationSiteLink -Name $SiteLinkName -SitesIncluded $DefaultSiteName,$SiteName -Cost 100 -ReplicationFrequencyInMinutes 15
+
+$SiteName = "St.Poelten-Office"
+$SiteLinkName = "SiteLink-Wien-HQ-St.Poelten-Office"
+# Erstellen des neuen Standorts
+New-ADReplicationSite -Name $SiteName
+# Erstellen der SiteLinks
+New-ADReplicationSiteLink -Name $SiteLinkName -SitesIncluded $DefaultSiteName,$SiteName -Cost 100 -ReplicationFrequencyInMinutes 15
+
+# Konfiguration des Subnetzes für den neuen Standort
