@@ -17,11 +17,11 @@ Set-DnsClientServerAddress -InterfaceAlias $InterfaceAlias -ServerAddresses ("19
 Install-WindowsFeature -Name AD-Domain-Services, DNS, DHCP -IncludeManagementTools
 
 # Konfiguration des RODC
-$DomainName = "corp.5cn.at"
+$DomainName = "corp.murbal.at"
 $SafeModePassword = Read-Host -Prompt "Bitte das DSRM-Kennwort für den AD DS Safe Mode eingeben" -AsSecureString
 
 Install-ADDSDomainController -DomainName $DomainName `
     -InstallDNS `
     -Credential (Get-Credential) `
     -SafeModeAdministratorPassword $SafeModePassword `
-    -ReplicationSourceDC winbalikcis1.corp.5cn.at
+    -ReplicationSourceDC DC1.corp.murbal.at
