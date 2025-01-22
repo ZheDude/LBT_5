@@ -65,3 +65,24 @@ Add-DnsServerResourceRecordPtr -Name "11" `
     -ZoneName "0.168.192.in-addr.arpa" `
     -PtrDomainName "DC2.corp.murbal.at" `
     -ComputerName DC1.corp.5cn.at
+
+
+Add-DhcpServerInDc -DnsName "WinBalikciS1" -IPAddress $IP
+
+# Erstellen eines DHCP-Scopes für das Subnetz 192.168.0.0/24
+$ScopeName = "LAN-HQ-Scope"
+$StartRange = "192.168.0.1"
+$EndRange = "192.168.0.254"
+$ExcludedStart = "192.168.0.1"
+$ExcludedEnd = "192.168.0.20"
+$SubnetMask = "255.255.255.0"
+$Gateway = "192.168.0.254"
+$DnsServers = "192.168.0.10","192.168.0.11"
+
+Add-DhcpServerv4Scope -Name $ScopeName -StartRange $StartRange -EndRange $EndRange -SubnetMask $SubnetMask -State Active
+Add-DhcpServerv4ExclusionRange -ScopeId "192.168.0.0" -StartRange $ExcludedStart -EndRange $ExcludedEnd
+Add-DhcpServerv4ExclusionRange -ScopeId "192.168.0.0" -StartRange $Gateway -EndRange $Gateway
+Set-DhcpServerv4OptionValue -ScopeId "192.168.0.0" -OptionId 3 -Value $Gateway
+Set-DhcpServerv4OptionValue -ScopeId "192.168.0.0" -OptionId 6 -Value $DnsServers
+
+Write-Host "Konfiguration abgeschlossen."
