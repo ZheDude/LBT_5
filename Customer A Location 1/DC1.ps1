@@ -67,7 +67,9 @@ Add-DnsServerResourceRecordPtr -Name "11" `
     -ComputerName DC1.corp.5cn.at
 
 
-Add-DhcpServerInDc -DnsName "WinBalikciS1" -IPAddress $IP
+$IP = "192.168.0.10"
+$Hostname = "DC1"
+Add-DhcpServerInDc -DnsName $Hostname -IPAddress $IP
 
 # Erstellen eines DHCP-Scopes für das Subnetz 192.168.0.0/24
 $ScopeName = "LAN-HQ-Scope"
