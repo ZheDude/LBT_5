@@ -55,9 +55,11 @@ bgp router-id 1.1.2.3
 #IBGP Zeug
 neighbor 1.1.2.2 remote-as 20
 neighbor 1.1.2.2 update-source lo0
+neighbor 1.1.2.2 next-hop-self
 
 neighbor 1.1.2.1 remote-as 20
 neighbor 1.1.2.1 update-source lo0
+neighbor 1.1.2.1 next-hop-self
 
 #Networks
 network 43.21.5.0 mask 255.255.255.252
@@ -93,16 +95,14 @@ neighbor 43.21.5.1 update-source g0/2
 address-family ipv4 vrf Cust-A
 network 78.25.68.0 mask 255.255.255.252
 exit
-address-family ipv4 
-network 78.25.68.0 mask 255.255.255.252
-exit
 exit
 
 ip route 0.0.0.0 0.0.0.0 43.21.5.1
+ip route vrf Cust-A 0.0.0.0 0.0.0.0 43.21.5.1
+
 
 # route leaking
-ip prefix-list INTERNET seq 10 deny 12.0.0.0/30
-ip prefix-list INTERNET seq 20 permit 0.0.0.0/0
+ip prefix-list INTERNET seq 10 permit 0.0.0.0/0
 
 route-map RM_INTERNET permit 10
 match ip address prefix-list INTERNET
@@ -112,6 +112,17 @@ ip vrf Cust-A
 import ipv4 unicast map RM_INTERNET
 
 
+ip prefix-list VRF_ROUTES seq 5 permit 78.25.68.0/30
+ip prefix-list VRF_ROUTES seq 10 permit 13.0.0.0/30
+ip prefix-list VRF_ROUTES seq 15 permit 52.235.12.0/30
+
+route-map VRF_IMPORT_TO_GRT permit 10
+ match ip address prefix-list VRF_ROUTES
+ set vrf Cust-A
+
+router bgp 20
+ address-family ipv4
+   redistribute vrf Cust-A static route-map VRF_IMPORT_TO_GRT
 
 # this option exposes the VRF to the global routing table so the eBGP can return the replies.
 ip prefix-list EXPORT_TO_GRT seq 10 permit 78.25.68.0/30
@@ -151,3 +162,11 @@ no ip access-list extended Cust-A-To-Internet-NAT
 ip access-list extended Cust-A-To-Internet-NAT
 permit ip any any
 exit
+
+
+
+ip route 78.25.68.0 255.255.255.252 43.21.5.2
+ip route 13.0.0.0 255.255.255.252 43.21.5.2
+ip route 52.235.12.0 255.255.255.252 43.21.5.2
+
+ip route 52.235.12.0 255.255.255.252 gig0/1 
