@@ -91,12 +91,11 @@ Write-Host "Konfiguration abgeschlossen."
 
 
 # DHCP Failover konfigurieren#
-$PrimaryDHCP = "DC1"
-$SecondaryDHCP = "DC2"
+$PrimaryDHCP = "DC1.corp.murbal.at"
+$SecondaryDHCP = "DC2.corp.murbal.at"
 $ScopeId = "192.168.0.0"
 $FailoverName = "Failover-HQ"
-$Mode = "LoadBalance"
-$LoadBalanceRatio = 50
-$StateSwitchInterval = 60
 
-Add-DhcpServerv4Failover -Name $FailoverName -ScopeId $ScopeId -PartnerServer $SecondaryDHCP -SharedSecret "SuperGeheim123!" -Mode $Mode -LoadBalancePercent $LoadBalanceRatio -StateSwitchInterval $StateSwitchInterval
+Add-DhcpServerv4Failover -ComputerName $PrimaryDHCP -Name `
+$FailoverName -PartnerServer $SecondaryDHCP -ScopeId $ScopeId `
+ -LoadBalancePercent 50 -MaxClientLeadTime 2:00:00 -AutoStateTransition $True -StateSwitchInterval 2:00:00
