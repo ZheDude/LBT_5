@@ -99,3 +99,23 @@ $FailoverName = "Failover-HQ"
 Add-DhcpServerv4Failover -ComputerName $PrimaryDHCP -Name `
 $FailoverName -PartnerServer $SecondaryDHCP -ScopeId $ScopeId `
  -LoadBalancePercent 50 -MaxClientLeadTime 2:00:00 -AutoStateTransition $True -StateSwitchInterval 2:00:00
+
+# OU Struktur
+$OUName = "HQ"
+$OUPath = "DC=corp,DC=murbal,DC=at"
+New-ADOrganizationalUnit -Name $OUName -Path "DC=corp,DC=murbal,DC=at"
+
+# GPO - Konfigurationen
+# 1. GPO welches den Desktop Hintergrund Bild festlegt
+$GPOName = "Desktop Bild"
+$GPOPath = "OU=HQ,DC=corp,DC=murbal,DC=at"
+$GPODescription = "Setzt den Desktop Hintergrund"
+$GPODisplayName = "Desktop Hintergrund"
+$GPOValue = "C:\Windows\Web\Wallpaper\Windows10.jpg"
+$GPOValueName = "DesktopBackground"
+$GPOValuePath = "Desktop"
+$GPOValueProperty = "WallpaperStyle"
+$GPOValueData = "0"
+$GPOValueProperty2 = "TileWallpaper"
+$GPOValueData2 = "0"
+
