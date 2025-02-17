@@ -119,3 +119,21 @@ $GPOValueData = "0"
 $GPOValueProperty2 = "TileWallpaper"
 $GPOValueData2 = "0"
 
+New-GPO -Name $GPOName -Comment $GPODescription -Domain $DomainName
+New-GPLink -Name $GPOName -Target $GPOPath
+Set-GPRegistryValue -Name $GPOName -Key $GPOValuePath -ValueName $GPOValueName -Type String -Value $GPOValue
+Set-GPRegistryValue -Name $GPOName -Key $GPOValuePath -ValueName $GPOValueProperty -Type String -Value $GPOValueData
+Set-GPRegistryValue -Name $GPOName -Key $GPOValuePath -ValueName $GPOValueProperty2 -Type String -Value $GPOValueData2
+
+
+# 2. GPO welches den Sperrbildschirm festlegt
+$GPOName2 = "Sperrbildschirm"
+$GPOPath2 = "OU=HQ,DC=corp,DC=murbal,DC=at"
+$GPODescription2 = "Setzt den Sperrbildschirm"
+$GPODisplayName2 = "Sperrbildschirm"
+$GPOValue2 = "C:\Windows\Web\Wallpaper\Windows10.jpg"
+$GPOValueName2 = "LockScreenImage"
+$GPOValuePath2 = "Desktop"
+$GPOValueProperty2 = "LockScreenImage"
+$GPOValueData2 = "C:\Windows\Web\Wallpaper\Windows10.jpg"
+
