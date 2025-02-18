@@ -1,4 +1,4 @@
-Rename-Computer -NewName "DC1" -Force -Restart
+Rename-Computer -NewName "HQ-DC1" -Force -Restart
 
 # Warten auf Neustart (manuelle Wiederaufnahme erforderlich)
 Write-Host "Neustart des Computers erforderlich. Bitte nach Neustart das Skript erneut ausführen."
@@ -58,13 +58,13 @@ Add-DnsServerPrimaryZone -NetworkID "172.16.0.0/24" -ReplicationScope "Forest"
 
 Add-DnsServerResourceRecordPtr -Name "10" `
     -ZoneName "0.168.192.in-addr.arpa" `
-    -PtrDomainName "DC1.corp.murbal.at" `
-    -ComputerName DC1.corp.5cn.at
+    -PtrDomainName "HQ-DC1.corp.murbal.at" `
+    -ComputerName HQ-DC1.corp.5cn.at
 
 Add-DnsServerResourceRecordPtr -Name "11" `
     -ZoneName "0.168.192.in-addr.arpa" `
-    -PtrDomainName "DC2.corp.murbal.at" `
-    -ComputerName DC1.corp.5cn.at
+    -PtrDomainName "HQ-DC2.corp.murbal.at" `
+    -ComputerName HQ-DC1.corp.5cn.at
 
 
 $IP = "192.168.0.10"
@@ -90,9 +90,9 @@ Set-DhcpServerv4OptionValue -ScopeId "192.168.0.0" -OptionId 6 -Value $DnsServer
 Write-Host "Konfiguration abgeschlossen."
 
 
-# DHCP Failover konfigurieren#
-$PrimaryDHCP = "DC1.corp.murbal.at"
-$SecondaryDHCP = "DC2.corp.murbal.at"
+# DHCP Failover konfigurieren
+$PrimaryDHCP = "HQ-DC1.corp.murbal.at"
+$SecondaryDHCP = "HQ-DC2.corp.murbal.at"
 $ScopeId = "192.168.0.0"
 $FailoverName = "Failover-HQ"
 
@@ -103,7 +103,12 @@ $FailoverName -PartnerServer $SecondaryDHCP -ScopeId $ScopeId `
 # OU Struktur
 $OUName = "HQ"
 $OUPath = "DC=corp,DC=murbal,DC=at"
-New-ADOrganizationalUnit -Name $OUName -Path "DC=corp,DC=murbal,DC=at"
+New-ADOrganizationalUnit -Name $OUName -Path $OUPath
+$OUPath = "OU=HQ,DC=corp,DC=murbal,DC=at"
+$OUName = "HQ/Users"
+New-ADOrganizationalUnit -Name $OUName -Path $OUPath
+$OUName = "HQ/Groups"
+New-ADOrganizationalUnit -Name $OUName -Path $OUPath
 
 # GPO - Konfigurationen
 # 1. GPO welches den Desktop Hintergrund Bild festlegt

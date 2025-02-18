@@ -1,5 +1,5 @@
 # Setzen des Hostnamens und Neustart für Änderung
-Rename-Computer -NewName "DC2" -Force -Restart
+Rename-Computer -NewName "HQ-DC2" -Force -Restart
 
 # Warten auf Neustart (Skript nach Neustart erneut ausführen)
 Write-Host "Computer wird neu gestartet. Nach dem Neustart bitte das Skript erneut ausführen."
@@ -24,4 +24,4 @@ Install-ADDSDomainController -DomainName $DomainName `
     -InstallDNS `
     -Credential (Get-Credential) `
     -SafeModeAdministratorPassword $SafeModePassword `
-    -ReplicationSourceDC DC1.corp.murbal.at
+    -ReplicationSourceDC HQ-DC1.corp.murbal.at
