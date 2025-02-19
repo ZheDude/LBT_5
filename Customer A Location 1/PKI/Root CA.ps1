@@ -31,3 +31,24 @@ AlternateSignatureAlgorithm=1
 "@
 
 $CAPolicy | Out-File -FilePath "C:\Windows\CAPolicy.inf" -Encoding ascii
+
+
+WindowsFeature Adcs-Cert-Authority -IncludeManagementTools Install-AdcsCertificationAuthority –CAType StandaloneRootCA –CACommonName "MurbalRootCA" –KeyLength 2048 –HashAlgorithm SHA1 –CryptoProviderName "RSA#Microsoft Software Key Storage Provider"
+
+certutil -setreg CA\CRLPublicationURLs "1:C:\Windows\system32\CertSrv\CertEnroll\%3%8.crl\n2:https://pki.corp.murbal.at/pki/%3%8.crl"
+
+certutil –setreg CA\CACertPublicationURLs "2:https://pki.corp.murbal.at/pki/%1_%3%4.crt"
+
+Certutil -setreg CA\CRLOverlapPeriodUnits 12
+
+Certutil -setreg CA\CRLOverlapPeriod "Hours"
+
+Certutil -setreg CA\ValidityPeriodUnits 10
+
+Certutil -setreg CA\ValidityPeriod "Years"
+
+certutil -setreg CA\DSConfigDN CN=Configuration,DC=corp,DC=murbal,DC=at
+
+restart-service certsvc
+
+certutil -crl
