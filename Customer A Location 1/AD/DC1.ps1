@@ -105,9 +105,9 @@ $OUName = "HQ"
 $OUPath = "DC=corp,DC=murbal,DC=at"
 New-ADOrganizationalUnit -Name $OUName -Path $OUPath
 $OUPath = "OU=HQ,DC=corp,DC=murbal,DC=at"
-$OUName = "HQ/Users"
+$OUName = "Users"
 New-ADOrganizationalUnit -Name $OUName -Path $OUPath
-$OUName = "HQ/Groups"
+$OUName = "Groups"
 New-ADOrganizationalUnit -Name $OUName -Path $OUPath
 
 
