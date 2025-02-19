@@ -17,7 +17,7 @@ Policies=InternalPolicy
 [InternalPolicy]
 OID= 1.2.3.4.1455.67.89.5
 Notice="Legal Policy Statement"
-URL=https://pki.murbal.at/pki/cps.txt
+URL=https://pki.corp.murbal.at/pki/cps.txt
 [Certsrv_Server]
 RenewalKeyLength=2048
 RenewalValidityPeriod=Years
