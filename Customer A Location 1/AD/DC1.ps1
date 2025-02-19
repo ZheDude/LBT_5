@@ -110,6 +110,23 @@ New-ADOrganizationalUnit -Name $OUName -Path $OUPath
 $OUName = "HQ/Groups"
 New-ADOrganizationalUnit -Name $OUName -Path $OUPath
 
+
+# Radius User and Groups
+$GroupName = "Net-Admins"
+$GroupDescription = "Netzwerk Administratoren"
+$GroupPath = "OU=Groups,OU=HQ,DC=corp,DC=murbal,DC=at"
+New-ADGroup -Name $GroupName -Description $GroupDescription -Path $GroupPath -GroupCategory Security -GroupScope Global
+
+$UserName = "NetAdmin"
+$UserDescription = "Netzwerk Administrator"
+$UserPath = "OU=Users,OU=HQ,DC=corp,DC=murbal,DC=at"
+$UserPassword = Read-Host -Prompt "Bitte das Kennwort für den Benutzer eingeben" -AsSecureString
+New-ADUser -Name $UserName -Description $UserDescription -Path $UserPath -AccountPassword $UserPassword -ChangePasswordAtLogon $True -Enabled $True
+
+## Gruppenmitgliedschaft
+Add-ADGroupMember -Identity $GroupName -Members $UserName
+
+
 # GPO - Konfigurationen
 # 1. GPO welches den Desktop Hintergrund Bild festlegt
 $GPOName = "Desktop Bild"
