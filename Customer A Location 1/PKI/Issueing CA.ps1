@@ -9,6 +9,9 @@ $InterfaceAlias = (Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }).Interfa
 New-NetIPAddress -InterfaceAlias $InterfaceAlias -IPAddress $IP -PrefixLength 24 -DefaultGateway $Gateway
 Set-DnsClientServerAddress -InterfaceAlias $InterfaceAlias -ServerAddresses ("192.168.0.10")
 
+$DomainName = "corp.murbal.at"
+$DomainCreds = Get-Credential -Message "Bitte die Anmeldeinformationen eines Domänenadministrators eingeben"
+Add-Computer -DomainName $DomainName -Credential $DomainCreds -Restart
 
 
 certutil –dspublish –f orca1_ContosoRootCA.crt RootCA 
