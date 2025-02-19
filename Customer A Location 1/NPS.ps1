@@ -11,6 +11,11 @@ Set-DnsClientServerAddress -InterfaceAlias $InterfaceAlias -ServerAddresses ("19
 
 Install-WindowsFeature -Name NPAS -IncludeManagementTools
 
+# AD Join
+$DomainName = "corp.murbal.at"
+$DomainCreds = Get-Credential -Message "Bitte die Anmeldeinformationen eines Domänenadministrators eingeben"
+Add-Computer -DomainName $DomainName -Credential $DomainCreds -Restart
+
 # Konfiguration des NPS
 
 Mit netsh nps sollen nur Clients angelegt werden. die Definition der Policies erfolgt über die GUI

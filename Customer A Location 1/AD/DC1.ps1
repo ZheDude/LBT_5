@@ -126,6 +126,9 @@ New-ADUser -Name $UserName -Description $UserDescription -Path $UserPath -Accoun
 ## Gruppenmitgliedschaft
 Add-ADGroupMember -Identity $GroupName -Members $UserName
 
+## Benutzer akivieren
+Enable-ADAccount -Identity $UserName
+
 
 # GPO - Konfigurationen
 # 1. GPO welches den Desktop Hintergrund Bild festlegt
