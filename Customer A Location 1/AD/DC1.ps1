@@ -59,16 +59,16 @@ Add-DnsServerPrimaryZone -NetworkID "172.16.0.0/24" -ReplicationScope "Forest"
 Add-DnsServerResourceRecordPtr -Name "10" `
     -ZoneName "0.168.192.in-addr.arpa" `
     -PtrDomainName "HQ-DC1.corp.murbal.at" `
-    -ComputerName HQ-DC1.corp.5cn.at
+    -ComputerName HQ-DC1.corp.murbal.at
 
 Add-DnsServerResourceRecordPtr -Name "11" `
     -ZoneName "0.168.192.in-addr.arpa" `
     -PtrDomainName "HQ-DC2.corp.murbal.at" `
-    -ComputerName HQ-DC1.corp.5cn.at
+    -ComputerName HQ-DC1.corp.murbal.at
 
 
 $IP = "192.168.0.10"
-$Hostname = "DC1"
+$Hostname = "HQ-DC1"
 Add-DhcpServerInDc -DnsName $Hostname -IPAddress $IP
 
 # Erstellen eines DHCP-Scopes für das Subnetz 192.168.0.0/24
