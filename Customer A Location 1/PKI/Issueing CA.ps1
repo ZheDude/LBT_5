@@ -14,6 +14,28 @@ $DomainCreds = Get-Credential -Message "Bitte die Anmeldeinformationen eines Dom
 Add-Computer -DomainName $DomainName -Credential $DomainCreds -Restart
 
 
-certutil –dspublish –f orca1_ContosoRootCA.crt RootCA 
-certutil –addstore –f root orca1_ContosoRootCA.crt 
-certutil –addstore –f root ContosoRootCA.crl
+certutil -dspublish -f OfflineRootCA_MurbalRootCA.crt  RootCA 
+certutil -addstore -f root OfflineRootCA_MurbalRootCA.crt 
+certutil -addstore -f root MurbalRootCA.crl
+
+
+
+Install-WindowsFeature -Name Web-Server, Web-WebServer, Web-Common-Http, Web-Default-Doc, Web-Static-Content, Web-Dir-Browsing, Web-Http-Errors -IncludeManagementTools
+
+
+$folderPath = "C:\pki"
+$shareName = "pki"
+$domainGroup = "CORP\Cert Publishers"
+
+if (!(Test-Path $folderPath)) {
+    New-Item -Path $folderPath -ItemType Directory
+    Write-Host "Folder 'pki' created at C:\."
+} else {
+    Write-Host "Folder 'pki' already exists."
+}
+
+New-smbshare -name $shareName $folderPath -FullAccess SYSTEM,"CORP\Domain Admins" -ChangeAccess $domainGroup
+
+# IIS Starten
+# Neues Virtual Directory erstellen
+# 

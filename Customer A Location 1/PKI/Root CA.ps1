@@ -1,8 +1,5 @@
 Rename-Computer -NewName "OfflineRootCA" -Force -Restart
 
-New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress "192.168.10.11" -PrefixLength 24 -DefaultGateway "192.168.10.1"
-Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "192.168.10.10"
-# Rollen und Features für ADCS und IIS installieren
 Install-WindowsFeature -Name ADCS-Cert-Authority -IncludeManagementTools
 
 # prepare CAPolicy.inf

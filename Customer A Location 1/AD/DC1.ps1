@@ -67,6 +67,11 @@ Add-DnsServerResourceRecordPtr -Name "11" `
     -ComputerName HQ-DC1.corp.murbal.at
 
 
+Add-DnsServerResourceRecordPtr -Name "12" `
+    -ZoneName "0.168.192.in-addr.arpa" `
+    -PtrDomainName "pki.corp.murbal.at" `
+    -ComputerName HQ-DC1.corp.murbal.at
+
 $IP = "192.168.0.10"
 $Hostname = "HQ-DC1"
 Add-DhcpServerInDc -DnsName $Hostname -IPAddress $IP
