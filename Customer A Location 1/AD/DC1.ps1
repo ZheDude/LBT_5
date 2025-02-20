@@ -66,11 +66,10 @@ Add-DnsServerResourceRecordPtr -Name "11" `
     -PtrDomainName "HQ-DC2.corp.murbal.at" `
     -ComputerName HQ-DC1.corp.murbal.at
 
-
-Add-DnsServerResourceRecordPtr -Name "12" `
-    -ZoneName "0.168.192.in-addr.arpa" `
-    -PtrDomainName "pki.corp.murbal.at" `
-    -ComputerName HQ-DC1.corp.murbal.at
+# PKi DNS CName
+$CName = "pki.corp.murbal.at"
+$CNameTarget = "HQ-ICA.corp.murbal.at"
+Add-DnsServerResourceRecordCName -Name $CName -HostNameAlias $CNameTarget -ZoneName "corp.murbal.at"
 
 $IP = "192.168.0.10"
 $Hostname = "HQ-DC1"
@@ -166,4 +165,3 @@ $GPOValueName2 = "LockScreenImage"
 $GPOValuePath2 = "Desktop"
 $GPOValueProperty2 = "LockScreenImage"
 $GPOValueData2 = "C:\Windows\Web\Wallpaper\Windows10.jpg"
-
