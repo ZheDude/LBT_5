@@ -79,3 +79,37 @@ neighbor 1.1.2.3 activate
 
 neighbor 1.1.2.2 send-community extended
 neighbor 1.1.2.3 send-community extended
+
+
+
+
+ip prefix-list BOGONS seq 10 deny 0.0.0.0/8
+ip prefix-list BOGONS seq 20 deny 10.0.0.0/8
+ip prefix-list BOGONS seq 30 deny 127.0.0.0/8
+ip prefix-list BOGONS seq 40 deny 169.254.0.0/16
+ip prefix-list BOGONS seq 50 deny 172.16.0.0/12
+ip prefix-list BOGONS seq 60 deny 192.0.2.0/24
+ip prefix-list BOGONS seq 70 deny 192.168.0.0/16
+ip prefix-list BOGONS seq 80 deny 198.18.0.0/15
+ip prefix-list BOGONS seq 90 deny 224.0.0.0/4
+ip prefix-list BOGONS seq 100 deny 240.0.0.0/4
+ip prefix-list BOGONS seq 110 permit 0.0.0.0/0
+
+access-list 100 deny ip 10.0.0.0 0.255.255.255 any
+access-list 100 deny ip 127.0.0.0 0.255.255.255 any
+access-list 100 deny ip 169.254.0.0 0.0.255.255 any
+access-list 100 deny ip 172.16.0.0 0.15.255.255 any
+access-list 100 deny ip 192.168.0.0 0.0.255.255 any
+access-list 100 deny ip 224.0.0.0 15.255.255.255 any
+access-list 100 deny ip 240.0.0.0 15.255.255.255 any
+access-list 100 permit ip any any
+
+interface GigabitEthernet0/1
+ip access-group 100 in
+
+interface GigabitEthernet0/2
+ip access-group 100 in
+
+
+router bgp 20
+neighbor 13.0.0.2 prefix-list BOGONS in
