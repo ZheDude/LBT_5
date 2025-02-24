@@ -105,10 +105,12 @@ access-list 100 deny ip 224.0.0.0 15.255.255.255 any
 access-list 100 deny ip 240.0.0.0 15.255.255.255 any
 access-list 100 permit ip any any
 
+interface GigabitEthernet0/1
+no ip access-group 100 in
 
 interface GigabitEthernet0/2
-ip access-group 100 in
+no ip access-group 100 in
 
 
 router bgp 10
-neighbor 43.21.5.2 prefix-list BOGONS in
+no neighbor 43.21.5.2 prefix-list BOGONS in

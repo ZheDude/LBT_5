@@ -107,9 +107,18 @@ access-list 100 permit ip any any
 interface GigabitEthernet0/1
 ip access-group 100 in
 
-interface GigabitEthernet0/2
-ip access-group 100 in
+
 
 
 router bgp 20
 neighbor 13.0.0.2 prefix-list BOGONS in
+
+
+int g0/2
+ip add 192.168.99.101 255.255.255.0
+no shut
+
+
+logging on
+logging 192.168.99.1
+logging trap debugging

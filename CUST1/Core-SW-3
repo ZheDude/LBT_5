@@ -119,3 +119,28 @@ interface GigabitEthernet1/1
 ip arp inspection trust
 interface GigabitEthernet1/0
 ip arp inspection trust
+
+
+interface GigabitEthernet3/2
+ip arp inspection trust
+ip dhcp snooping trust
+
+interface GigabitEthernet3/3
+ip arp inspection trust
+ip dhcp snooping trust
+
+interface GigabitEthernet3/1
+ip arp inspection trust
+ip dhcp snooping trust
+
+
+en
+conf t
+vlan 999
+remote-span
+name RSPAN_VLAN
+exit
+
+monitor session 1 source remote vlan 999
+monitor session 1 destination interface gigabitEthernet 3/1
+

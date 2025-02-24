@@ -106,7 +106,9 @@ ip arp inspection trust
 
 
 
-
+interface GigabitEthernet0/0
+ip arp inspection trust
+ip dhcp snooping trust
 
 
 
@@ -130,5 +132,15 @@ interface GigabitEthernet0/2
 switchport mode private-vlan host
 switchport private-vlan host-association 100 102
 
+
+en
+conf t
+vlan 999
+remote-span
+name RSPAN_VLAN
+exit
+
+monitor session 1 source interface g0/1
+monitor session 1 destination remote vlan 999
 
 

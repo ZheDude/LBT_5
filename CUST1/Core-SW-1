@@ -81,7 +81,7 @@ spanning-tree guard root
 
 
 ip dhcp snooping
-ip dhcp snooping vlan 100, 101, 102
+ip dhcp snooping vlan 100,101,102
 
 interface GigabitEthernet0/2
 ip dhcp snooping trust
@@ -97,7 +97,7 @@ interface GigabitEthernet1/0
 ip dhcp snooping trust
 
 exit
-ip arp inspection vlan 100, 101, 102
+ip arp inspection vlan 100,101,102
 
 interface GigabitEthernet2/1
 ip arp inspection trust
@@ -111,3 +111,15 @@ interface GigabitEthernet0/1
 ip arp inspection trust
 interface GigabitEthernet0/2
 ip arp inspection trust
+
+
+en
+conf t
+vlan 999
+remote-span
+name RSPAN_VLAN
+exit
+
+
+monitor session 1 source interface g0/0
+monitor session 1 destination remote vlan 999
