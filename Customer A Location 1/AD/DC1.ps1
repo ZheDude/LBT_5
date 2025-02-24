@@ -169,7 +169,7 @@ $GPOValueData2 = "C:\Windows\Web\Wallpaper\Windows10.jpg"
 
 # AGDLP
 # Erstellen der OUs 
-$fullPath = "OU=HQ,DC=corp,DC=5cn,DC=at"
+$fullPath = "OU=HQ,DC=corp,DC=murbal,DC=at"
 $departments = @("IT", "Marketing", "Sales", "Production", "HR") 
 foreach ($dept in $departments) { 
     New-ADOrganizationalUnit -Name $dept -Path $fullPath 
@@ -196,7 +196,7 @@ $users = @(
 foreach ($user in $users) { 
     $ouPath = "OU=$($user.Dept),$($fullPath)" 
     $username = $user.Name -replace "\s", "" 
-    New-ADUser -Name $user.Name -GivenName ($user.Name.Split()[0]) -Surname ($user.Name.Split()[1]) -SamAccountName $username -UserPrincipalName "$username@corp.5cn.at" -Path $ouPath -AccountPassword (ConvertTo-SecureString "SuperGeheim123!" -AsPlainText -Force) -Enabled $true
+    New-ADUser -Name $user.Name -GivenName ($user.Name.Split()[0]) -Surname ($user.Name.Split()[1]) -SamAccountName $username -UserPrincipalName "$username@corp.murbal.at" -Path $ouPath -AccountPassword (ConvertTo-SecureString "SuperGeheim123!" -AsPlainText -Force) -Enabled $true
 } 
 
 # Erstellen der Global Security Groups 
