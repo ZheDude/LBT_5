@@ -106,9 +106,9 @@ $FailoverName -PartnerServer $SecondaryDHCP -ScopeId $ScopeId `
 
 # OU Struktur
 $OUName = "HQ"
-$OUPath = "DC=corp,DC=murbal,DC=at"
+$OUPath = "DC=corp,DC=5cn,DC=at"
 New-ADOrganizationalUnit -Name $OUName -Path $OUPath
-$OUPath = "OU=HQ,DC=corp,DC=murbal,DC=at"
+$OUPath = "OU=HQ,DC=corp,DC=5cn,DC=at"
 $OUName = "Users"
 New-ADOrganizationalUnit -Name $OUName -Path $OUPath
 $OUName = "Groups"
@@ -165,3 +165,76 @@ $GPOValueName2 = "LockScreenImage"
 $GPOValuePath2 = "Desktop"
 $GPOValueProperty2 = "LockScreenImage"
 $GPOValueData2 = "C:\Windows\Web\Wallpaper\Windows10.jpg"
+
+
+# AGDLP
+# Erstellen der OUs 
+$fullPath = "OU=HQ,DC=corp,DC=5cn,DC=at"
+$departments = @("IT", "Marketing", "Sales", "Production", "HR") 
+foreach ($dept in $departments) { 
+    New-ADOrganizationalUnit -Name $dept -Path $fullPath 
+} 
+# Benutzer erstellen 
+$users = @( 
+    @{Name="Max Mustermann"; Dept="IT"; Role="Manager"}, 
+    @{Name="Lisa Müller"; Dept="Marketing"; Role="Manager"}, 
+    @{Name="Tom Schmidt"; Dept="Sales"; Role="Manager"}, 
+    @{Name="Anna Schulz"; Dept="Production"; Role="Manager"}, 
+    @{Name="Erik Hoffmann"; Dept="HR"; Role="Manager"}, 
+    @{Name="Julia Fischer"; Dept="IT"; Role="Staff"}, 
+    @{Name="Mark Weber"; Dept="Marketing"; Role="Staff"}, 
+    @{Name="Sarah Wagner"; Dept="Sales"; Role="Staff"}, 
+    @{Name="Paul Becker"; Dept="Production"; Role="Staff"}, 
+    @{Name="Laura Schäfer"; Dept="HR"; Role="Staff"}, 
+    @{Name="Jonas Bauer"; Dept="IT"; Role="Staff"}, 
+    @{Name="Nina Krause"; Dept="Marketing"; Role="Staff"}, 
+    @{Name="Leon Richter"; Dept="Sales"; Role="Staff"}, 
+    @{Name="Mia Wolf"; Dept="Production"; Role="Staff"}, 
+    @{Name="Felix Neumann"; Dept="HR"; Role="Staff"} 
+) 
+
+foreach ($user in $users) { 
+    $ouPath = "OU=$($user.Dept),$($fullPath)" 
+    $username = $user.Name -replace "\s", "" 
+    New-ADUser -Name $user.Name -GivenName ($user.Name.Split()[0]) -Surname ($user.Name.Split()[1]) -SamAccountName $username -UserPrincipalName "$username@corp.5cn.at" -Path $ouPath -AccountPassword (ConvertTo-SecureString "SuperGeheim123!" -AsPlainText -Force) -Enabled $true
+} 
+
+# Erstellen der Global Security Groups 
+$roles = @("Manager", "Staff") 
+foreach ($dept in $departments) { 
+    foreach ($role in $roles) { 
+        New-ADGroup -Name "Role_$dept-$role" -GroupScope Global -Path "OU=$dept,$fullPath" 
+    } 
+} 
+
+# Benutzer zu den Global Groups hinzufügen 
+foreach ($user in $users) { 
+    $username = $user.Name -replace "\s", "" 
+    Add-ADGroupMember -Identity "Role_$($user.Dept)-$($user.Role)" -Members $username 
+} 
+
+# Erstellen der Domain-Local Groups für Fileshare Berechtigungen 
+foreach ($dept in $departments) { 
+    New-ADGroup -Name "DL_$dept-Docs_Read" -GroupScope DomainLocal -Path "OU=$dept,$fullPath" 
+    New-ADGroup -Name "DL_$dept-Docs_Write" -GroupScope DomainLocal -Path "OU=$dept,$fullPath" 
+    New-ADGroup -Name "DL_$dept-Docs_Modify" -GroupScope DomainLocal -Path "OU=$dept,$fullPath" 
+} 
+
+# Global Groups zu den Domain-Local Groups hinzufügen 
+foreach ($dept in $departments) { 
+    $cn_read = Get-ADGroup -Identity "DL_${dept}-Docs_Read" | Select DistinguishedName 
+    $cn_write = Get-ADGroup -Identity "DL_${dept}-Docs_Write" | Select DistinguishedName 
+    $cn_modify = Get-ADGroup -Identity "DL_${dept}-Docs_Modify" | Select DistinguishedName 
+    Add-ADGroupMember -Identity $cn_read -Members "Role_${dept}-Staff" 
+    Add-ADGroupMember -Identity $cn_write -Members "Role_${dept}-Staff" 
+    Add-ADGroupMember -Identity $cn_modify -Members "Role_${dept}-Manager" 
+} 
+
+
+# DFS Konfiguration
+Install-WindowsFeature -Name FS-DFS-Namespace, FS-DFS-Replication, RSAT-DFS-Mgmt-Con -IncludeManagementTools
+
+# GPO DFS mount
+$GPOName = "DFS-Mount"
+$GPOPath = "OU=HQ,DC=corp,DC=murbal,DC=at"
+$GPODescription = "Mountet das DFS Share"
