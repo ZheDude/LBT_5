@@ -50,5 +50,7 @@ neighbor 33.33.33.33 update-source lo0
 network 15.0.0.0 mask 255.255.255.252
 
 
-
+router bgp 30
+neighbor 15.0.0.1 remote-as 10
+neighbor 15.0.0.1 update-source g0/1
 

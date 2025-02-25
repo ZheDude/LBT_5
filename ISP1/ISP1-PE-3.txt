@@ -114,3 +114,13 @@ no ip access-group 100 in
 
 router bgp 10
 no neighbor 43.21.5.2 prefix-list BOGONS in
+
+
+int g0/3
+ip add 15.0.0.1 255.255.255.252
+no shut
+
+router bgp 10
+neighbor 15.0.0.2 remote-as 30
+neighbor 15.0.0.2 update-source g0/3
+network 15.0.0.0 mask 255.255.255.252
