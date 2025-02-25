@@ -145,7 +145,7 @@ monitor session 1 destination remote vlan 999
 
 
 
-int range g0/1
+int g0/1
 spanning-tree portfast
 spanning-tree bpduguard
 

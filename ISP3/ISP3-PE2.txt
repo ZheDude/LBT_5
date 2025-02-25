@@ -28,3 +28,13 @@ tunnel destination 192.168.1.2
 
 interface Tunnel 0
 ip nhrp shortcut
+
+int lo0
+ip add 22.22.22.22 255.255.255.255
+no shut
+
+int Tunnel0 
+ip ospf network point-to-multipoint
+router ospf 10
+network  172.16.0.0 0.0.255.255 area 10
+network  22.22.22.22 0.0.0.0 area 10
