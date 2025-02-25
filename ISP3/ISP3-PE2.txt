@@ -9,4 +9,22 @@ no shut
 
 
 router ospf 10
-network 192.168.2.0 0.0.0.255
+network 192.168.2.0 0.0.0.255 area 0
+
+
+!###########################
+! DMVPN CONFIG (SPOKE)
+!###########################
+
+interface Tunnel0
+ip address 172.16.0.2 255.255.0.0
+ip nhrp authentication DMVPN
+ip nhrp map 172.16.0.1 192.168.1.2
+ip nhrp map multicast 192.168.1.2
+ip nhrp network-id 1
+ip nhrp nhs 172.16.0.1
+tunnel source GigabitEthernet0/0
+tunnel destination 192.168.1.2
+
+interface Tunnel 0
+ip nhrp shortcut

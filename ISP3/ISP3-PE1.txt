@@ -8,4 +8,19 @@ ip add 192.168.1.2 255.255.255.0
 no shut
 
 router ospf 10
-network 192.168.1.0 0.0.0.255
+network 192.168.1.0 0.0.0.255 area 0
+
+!###########################
+! DMVPN CONFIG (HUB)
+!###########################
+
+
+interface Tunnel0
+ip address 172.16.0.1 255.255.0.0
+tunnel source GigabitEthernet0/0
+tunnel mode gre multipoint
+ip nhrp authentication DMVPN
+ip nhrp map multicast dynamic
+ip nhrp network-id 1
+interface tunnel 0
+ip nhrp redirect 
