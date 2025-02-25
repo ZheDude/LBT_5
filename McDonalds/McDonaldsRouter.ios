@@ -1,4 +1,28 @@
+en
+conf t
+hostname McDonaldsRouter
+
 int g0/1
 ip add 99.99.99.2 255.255.255.0
 no shut
+
+
+int g0/0
+ip add 192.168.3.254 255.255.255.0
+no shut
+
+
+int g0/1
+ip nat outside
+
+int g0/0
+ip nat inside
+
+end
+conf t
+access-list 1 permit 192.168.3.0 0.0.0.255
+ip nat inside source list 1 interface GigabitEthernet0/1 overload
+
+ip route 0.0.0.0 0.0.0.0 99.99.99.1
+
 

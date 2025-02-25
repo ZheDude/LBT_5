@@ -20,7 +20,7 @@ end
 en
 conf t
 
-
+#------------------------------------
 int range g1/0-1
 switchport trunk encapsulation dot1q
 switchport mode trunk
@@ -50,9 +50,7 @@ private-vlan community
 vlan 102
 private-vlan isolated
 
-interface GigabitEthernet0/0
-switchport mode private-vlan promiscuous
-switchport private-vlan mapping 100 101,102
+
 
 
 spanning-tree mode rapid-pvst
@@ -60,6 +58,11 @@ spanning-tree vlan 100 priority 4096
 spanning-tree vlan 101 priority 8192
 spanning-tree vlan 102 priority 4096
 
+
+
+interface GigabitEthernet0/0
+switchport mode private-vlan promiscuous
+switchport private-vlan mapping 100 101,102
 
 spanning-tree loopguard default
 interface Port-channel1
@@ -75,3 +78,48 @@ interface Port-channel3
 switchport trunk encapsulation dot1q
 switchport mode trunk
 spanning-tree guard root 
+
+
+ip dhcp snooping
+ip dhcp snooping vlan 100,101,102
+
+interface GigabitEthernet0/2
+ip dhcp snooping trust
+interface GigabitEthernet0/1
+ip dhcp snooping trust
+interface GigabitEthernet2/1
+ip dhcp snooping trust
+interface GigabitEthernet2/0
+ip dhcp snooping trust
+interface GigabitEthernet1/1
+ip dhcp snooping trust
+interface GigabitEthernet1/0
+ip dhcp snooping trust
+
+exit
+ip arp inspection vlan 100,101,102
+
+interface GigabitEthernet2/1
+ip arp inspection trust
+interface GigabitEthernet2/0
+ip arp inspection trust
+interface GigabitEthernet1/1
+ip arp inspection trust
+interface GigabitEthernet1/0
+ip arp inspection trust
+interface GigabitEthernet0/1
+ip arp inspection trust
+interface GigabitEthernet0/2
+ip arp inspection trust
+
+
+en
+conf t
+vlan 999
+remote-span
+name RSPAN_VLAN
+exit
+
+
+monitor session 1 source interface g0/0
+monitor session 1 destination remote vlan 999

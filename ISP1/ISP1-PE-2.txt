@@ -57,7 +57,8 @@ neighbor 1.1.1.1 update-source lo0
 
 network 12.0.0.0 mask 255.255.255.252
 
-
+end
+conf t
 
 ip prefix-list BOGONS seq 10 deny 0.0.0.0/8
 ip prefix-list BOGONS seq 20 deny 10.0.0.0/8
@@ -71,24 +72,30 @@ ip prefix-list BOGONS seq 90 deny 224.0.0.0/4
 ip prefix-list BOGONS seq 100 deny 240.0.0.0/4
 ip prefix-list BOGONS seq 110 permit 0.0.0.0/0
 
-router bgp 10
-neighbor 12.0.0.2 prefix-list BOGONS in
-
-
-end
-conf t
-
-access-list 100 deny ip 10.0.0.0 0.255.255.255 any
-access-list 100 deny ip 127.0.0.0 0.255.255.255 any
-access-list 100 deny ip 169.254.0.0 0.0.255.255 any
-access-list 100 deny ip 172.16.0.0 0.15.255.255 any
-access-list 100 deny ip 192.168.0.0 0.0.255.255 any
-access-list 100 deny ip 224.0.0.0 15.255.255.255 any
-access-list 100 deny ip 240.0.0.0 15.255.255.255 any
-access-list 100 permit ip any any
+no access-list 100 deny ip 10.0.0.0 0.255.255.255 any
+no access-list 100 deny ip 127.0.0.0 0.255.255.255 any
+no access-list 100 deny ip 169.254.0.0 0.0.255.255 any
+no access-list 100 deny ip 172.16.0.0 0.15.255.255 any
+no access-list 100 deny ip 192.168.0.0 0.0.255.255 any
+no access-list 100 deny ip 224.0.0.0 15.255.255.255 any
+no access-list 100 deny ip 240.0.0.0 15.255.255.255 any
+no access-list 100 permit ip any any
 
 
 interface GigabitEthernet0/1
-  ip access-group 100 in
+no ip access-group 100 in
 
 
+router bgp 10
+no neighbor 12.0.0.2 prefix-list BOGONS in
+
+
+
+int g0/2
+ip add 192.168.99.100 255.255.255.0
+no shut
+
+
+logging on
+logging 192.168.99.1
+logging trap debugging

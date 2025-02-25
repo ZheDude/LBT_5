@@ -46,14 +46,6 @@ private-vlan community
 vlan 102
 private-vlan isolated
 
-interface GigabitEthernet0/0
-switchport mode private-vlan host
-switchport private-vlan host-association 100 101
-switchport private-vlan mapping 100 101
-
-interface GigabitEthernet0/2
-switchport mode private-vlan host
-switchport private-vlan host-association 100 102
 
 spanning-tree mode rapid-pvst
 
@@ -69,8 +61,86 @@ interface Port-channel4
 switchport trunk encapsulation dot1q
 switchport mode trunk
 
-int g0/0
+int g0/1
 spanning-tree bpduguard enable
 
 int g0/2
 spanning-tree bpduguard enable
+
+
+interface GigabitEthernet0/1
+switchport mode private-vlan promiscuous
+switchport private-vlan mapping 100 101,102
+
+
+
+
+
+ip dhcp snooping
+ip dhcp snooping vlan 100, 101, 102
+
+interface GigabitEthernet0/1
+ip dhcp snooping trust
+interface GigabitEthernet2/1
+ip dhcp snooping trust
+interface GigabitEthernet2/0
+ip dhcp snooping trust
+interface GigabitEthernet1/1
+ip dhcp snooping trust
+interface GigabitEthernet1/0
+ip dhcp snooping trust
+
+exit
+ip arp inspection vlan 100,101,102
+
+interface GigabitEthernet0/1
+ip arp inspection trust
+interface GigabitEthernet2/1
+ip arp inspection trust
+interface GigabitEthernet2/0
+ip arp inspection trust
+interface GigabitEthernet1/1
+ip arp inspection trust
+interface GigabitEthernet1/0
+ip arp inspection trust
+
+
+
+interface GigabitEthernet0/0
+ip arp inspection trust
+ip dhcp snooping trust
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+interface GigabitEthernet0/0
+switchport mode private-vlan host
+switchport private-vlan host-association 100 101
+switchport private-vlan mapping 100 101
+
+interface GigabitEthernet0/2
+switchport mode private-vlan host
+switchport private-vlan host-association 100 102
+
+
+en
+conf t
+vlan 999
+remote-span
+name RSPAN_VLAN
+exit
+
+monitor session 1 source interface g0/1
+monitor session 1 destination remote vlan 999
+
+
