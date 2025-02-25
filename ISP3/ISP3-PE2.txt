@@ -1,0 +1,12 @@
+en
+conf t
+hostname ISP3-PE2
+
+int g0/0
+des to_BB
+ip add 192.168.2.2 255.255.255.0
+no shut
+
+
+router ospf 10
+network 192.168.2.0 0.0.0.255
