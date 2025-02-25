@@ -38,3 +38,11 @@ ip ospf network point-to-multipoint
 router ospf 10
 network  172.16.0.0 0.0.255.255 area 10
 network  33.33.33.33 0.0.0.0 area 10
+
+
+
+router bgp 30
+neighbor 22.22.22.22 remote-as 30
+neighbor 22.22.22.22 update-source lo0
+neighbor 33.33.33.33 remote-as 30
+neighbor 33.33.33.33 update-source lo0
