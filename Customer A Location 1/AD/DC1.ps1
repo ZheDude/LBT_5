@@ -35,17 +35,18 @@ $SiteName = "Linz-Office"
 $SiteLinkName = "SiteLink-Wien-HQ-Linz-Office"
 # Erstellen des neuen Standorts
 New-ADReplicationSite -Name $SiteName
+New-ADReplicationSubnet -Name "192.168.1.0/24" -Site $SiteName
 # Erstellen der SiteLinks
 New-ADReplicationSiteLink -Name $SiteLinkName -SitesIncluded $DefaultSiteName,$SiteName -Cost 100 -ReplicationFrequencyInMinutes 15
-New-ADReplicationSubnet -Name "192.168.1.0/24" -Site $SiteName
 
 $SiteName = "St-Poelten-Office"
 $SiteLinkName = "SiteLink-Wien-HQ-St-Poelten-Office"
 # Erstellen des neuen Standorts
 New-ADReplicationSite -Name $SiteName
+New-ADReplicationSubnet -Name "172.16.0.0/24" -Site $SiteName
 # Erstellen der SiteLinks
 New-ADReplicationSiteLink -Name $SiteLinkName -SitesIncluded $DefaultSiteName,$SiteName -Cost 100 -ReplicationFrequencyInMinutes 15
-New-ADReplicationSubnet -Name "172.16.0.0/24" -Site $SiteName
+
 
 # DNS-Konfiguration:
 $InterfaceAlias = (Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }).InterfaceAlias
@@ -68,7 +69,7 @@ Add-DnsServerResourceRecordPtr -Name "11" `
 
 # PKi DNS CName
 $CName = "pki.corp.murbal.at"
-$CNameTarget = "HQ-ICA.corp.murbal.at"
+$CNameTarget = "HQ-CA.corp.murbal.at"
 Add-DnsServerResourceRecordCName -Name $CName -HostNameAlias $CNameTarget -ZoneName "corp.murbal.at"
 
 $IP = "192.168.0.10"
@@ -87,6 +88,7 @@ $DnsServers = "192.168.0.10","192.168.0.11"
 
 Add-DhcpServerv4Scope -Name $ScopeName -StartRange $StartRange -EndRange $EndRange -SubnetMask $SubnetMask -State Active
 Add-DhcpServerv4ExclusionRange -ScopeId "192.168.0.0" -StartRange $ExcludedStart -EndRange $ExcludedEnd
+Add-DhcpServerv4ExclusionRange -ScopeId "192.168.0.0" -StartRange "192.168.0.100" -EndRange "192.168.0.103"
 Add-DhcpServerv4ExclusionRange -ScopeId "192.168.0.0" -StartRange $Gateway -EndRange $Gateway
 Set-DhcpServerv4OptionValue -ScopeId "192.168.0.0" -OptionId 3 -Value $Gateway
 Set-DhcpServerv4OptionValue -ScopeId "192.168.0.0" -OptionId 6 -Value $DnsServers
@@ -106,9 +108,9 @@ $FailoverName -PartnerServer $SecondaryDHCP -ScopeId $ScopeId `
 
 # OU Struktur
 $OUName = "HQ"
-$OUPath = "DC=corp,DC=5cn,DC=at"
+$OUPath = "DC=corp,DC=murbal,DC=at"
 New-ADOrganizationalUnit -Name $OUName -Path $OUPath
-$OUPath = "OU=HQ,DC=corp,DC=5cn,DC=at"
+$OUPath = "OU=HQ,DC=corp,DC=murbal,DC=at"
 $OUName = "Users"
 New-ADOrganizationalUnit -Name $OUName -Path $OUPath
 $OUName = "Groups"
