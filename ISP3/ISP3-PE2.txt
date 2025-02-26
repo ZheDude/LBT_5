@@ -53,6 +53,23 @@ neighbor 33.33.33.33 update-source lo0
 network 14.0.0.0 mask 255.255.255.252
 
 
+
+ip prefix-list DG seq 10 permit 12.0.0.0/30
+ip prefix-list DG seq 20 permit 13.0.0.0/30
+
+route-map PREFER_PRIMARY permit 10
+ match ip address prefix-list DG
+ set weight 300
+ set local-preference 150
+ exit
+route-map PREFER_PRIMARY permit 20
+exit
+
+
+
+
 router bgp 30
 neighbor 14.0.0.1 remote-as 10
 neighbor 14.0.0.1 update-source g0/1
+neighbor 14.0.0.1 next-hop-self
+neighbor 14.0.0.1 route-map PREFER_PRIMARY in

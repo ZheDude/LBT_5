@@ -50,7 +50,27 @@ neighbor 33.33.33.33 update-source lo0
 network 15.0.0.0 mask 255.255.255.252
 
 
+ip prefix-list DG seq 10 permit 0.0.0.0/0
+
+route-map PREFER_PRIMARY permit 10
+ match ip address prefix-list DG
+ set weight 300
+ set local-preference 150
+ exit
+route-map PREFER_PRIMARY permit 20
+exit
+
+
 router bgp 30
 neighbor 15.0.0.1 remote-as 10
 neighbor 15.0.0.1 update-source g0/1
+neighbor 15.0.0.1 next-hop-self
+neighbor 15.0.0.1 route-map PREFER_PRIMARY in
 
+
+ip prefix-list BLOCKED_ROUTES seq 5 deny 14.0.0.0/30
+ip prefix-list BLOCKED_ROUTES seq 10 deny 15.0.0.0/30
+ip prefix-list BLOCKED_ROUTES seq 15 permit 0.0.0.0/0 le 32
+
+router bgp 30
+neighbor 15.0.0.1 distribute-list BLOCKED_ROUTES out
