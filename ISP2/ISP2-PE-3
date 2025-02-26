@@ -65,114 +65,8 @@ neighbor 1.1.2.1 next-hop-self
 network 43.21.5.0 mask 255.255.255.252
 network 78.25.68.0 mask 255.255.255.252
 
-# NEU
-# VRF configuration:
-ip vrf Cust-A
-rd 10:50
-route-target export 10:50
-route-target import 10:50
 
-int gig0/1
-ip vrf forwarding Cust-A
-ip add 78.25.68.1 255.255.255.252
-
-router bgp 20
-#Networks
-no network 43.21.5.0 mask 255.255.255.252
-no network 78.25.68.0 mask 255.255.255.252
-
-address-family vpnv4
-neighbor 1.1.2.2 activate
-neighbor 1.1.2.1 activate
-
-neighbor 1.1.2.2 send-community extended
-neighbor 1.1.2.1 send-community extended
-
-router bgp 20
-neighbor 43.21.5.1 remote-as 10
-neighbor 43.21.5.1 update-source g0/2
-
-address-family ipv4 vrf Cust-A
-network 78.25.68.0 mask 255.255.255.252
-exit
-exit
-
-ip route 0.0.0.0 0.0.0.0 43.21.5.1
-ip route vrf Cust-A 0.0.0.0 0.0.0.0 43.21.5.1
-
-
-# route leaking
-ip prefix-list INTERNET seq 10 permit 0.0.0.0/0
-
-route-map RM_INTERNET permit 10
-match ip address prefix-list INTERNET
-exit
-
-ip vrf Cust-A
-import ipv4 unicast map RM_INTERNET
-
-
-ip prefix-list VRF_ROUTES seq 5 permit 78.25.68.0/30
-ip prefix-list VRF_ROUTES seq 10 permit 13.0.0.0/30
-ip prefix-list VRF_ROUTES seq 15 permit 52.235.12.0/30
-
-route-map VRF_IMPORT_TO_GRT permit 10
- match ip address prefix-list VRF_ROUTES
- set vrf Cust-A
-
-router bgp 20
- address-family ipv4
-   redistribute vrf Cust-A static route-map VRF_IMPORT_TO_GRT
-
-# this option exposes the VRF to the global routing table so the eBGP can return the replies.
-ip prefix-list EXPORT_TO_GRT seq 10 permit 78.25.68.0/30
-ip prefix-list EXPORT_TO_GRT seq 20 permit 13.0.0.0/30
-ip prefix-list EXPORT_TO_GRT seq 30 permit 52.235.12.0/30
-
-route-map RM_EXPORT_TO_GRT permit 10
-match ip address prefix-list EXPORT_TO_GRT
-exit
-
-ip vrf Cust-A
-export ipv4 unicast map RM_EXPORT_TO_GRT
-
-# Alternatively you can use NAT:
-ip access-list extended Cust-A-To-Internet-NAT
-permit ip 78.25.68.0 0.0.0.3 any
-permit ip 13.0.0.0 0.0.0.3 any
-permit ip 52.235.12.0 0.0.0.3 any
-deny ip any any
-exit
-
-ip nat inside source list Cust-A-To-Internet-NAT interface g0/2 vrf Cust-A overload
-
-int g0/2
-ip nat outside
-exit
-
-int gig0/1
-ip nat inside
-exit
-
-int gig0/0
-ip nat inside
-exit
-
-no ip access-list extended Cust-A-To-Internet-NAT
-ip access-list extended Cust-A-To-Internet-NAT
-permit ip any any
-exit
-
-
-
-ip route 78.25.68.0 255.255.255.252 43.21.5.2
-ip route 13.0.0.0 255.255.255.252 43.21.5.2
-ip route 52.235.12.0 255.255.255.252 43.21.5.2
-
-ip route 52.235.12.0 255.255.255.252 gig0/1 
-
-
-
+#BOGONS
 ip prefix-list BOGONS seq 10 deny 0.0.0.0/8
 ip prefix-list BOGONS seq 20 deny 10.0.0.0/8
 ip prefix-list BOGONS seq 30 deny 127.0.0.0/8
@@ -213,3 +107,25 @@ no shut
 logging on
 logging 192.168.99.1
 logging trap debugging
+
+
+ip vrf Cust-A
+rd 20:1
+route-target export 20:1
+route-target import 20:1
+
+int gig 0/4
+ip vrf forwarding Cust-A
+ip add 172.20.1.1 255.255.255.252
+no shut
+
+router bgp 20
+address-family vpnv4
+neighbor 1.1.2.2 activate
+
+router ospf 2 vrf Cust-A
+network 172.20.1.1 0.0.0.3 area 0
+
+router bgp 20
+address-family ipv4 vrf Cust-A
+redistribute ospf 2

@@ -106,3 +106,26 @@ access-list 100 permit ip any any
 interface GigabitEthernet0/1
 ip access-group 100 in
 
+
+ip vrf Cust-A
+rd 20:1
+route-target export 20:1
+route-target import 20:1
+
+int gig 0/2
+ip vrf forwarding Cust-A
+ip add 172.20.2.1 255.255.255.252
+no shut
+
+router bgp 20
+address-family vpnv4
+neighbor 1.1.2.3 activate
+
+
+
+router ospf 2 vrf Cust-A
+network 172.20.2.1 0.0.0.3 area 0
+
+router bgp 20
+address-family ipv4 vrf Cust-A
+redistribute ospf 2
