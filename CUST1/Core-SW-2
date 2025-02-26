@@ -137,3 +137,13 @@ authorization exec default
 transport input ssh
 exit
 radius-server attribute 6 on-for-login-auth
+
+
+
+interface GigabitEthernet0/0
+switchport mode private-vlan promiscuous
+switchport private-vlan mapping 100 101,102
+spanning-tree guard root
+interface GigabitEthernet0/0
+ip dhcp snooping trust
+ip arp inspection trust
