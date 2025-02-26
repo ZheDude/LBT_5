@@ -1,0 +1,56 @@
+en
+conf t
+hostname ISP3-PE1
+
+int g0/0
+des to_BB
+ip add 192.168.1.2 255.255.255.0
+no shut
+
+router ospf 10
+network 192.168.1.0 0.0.0.255 area 0
+
+!###########################
+! DMVPN CONFIG (HUB)
+!###########################
+
+
+interface Tunnel0
+ip address 172.16.0.1 255.255.0.0
+tunnel source GigabitEthernet0/0
+tunnel mode gre multipoint
+ip nhrp authentication DMVPN
+ip nhrp map multicast dynamic
+ip nhrp network-id 1
+interface tunnel 0
+ip nhrp redirect 
+
+
+int lo0
+ip add 11.11.11.11 255.255.255.255
+no shut
+
+int Tunnel0 
+ip ospf network point-to-multipoint
+router ospf 10
+network  172.16.0.0 0.0.255.255 area 10
+network  11.11.11.11 0.0.0.0 area 10
+
+
+int g0/1
+des to_ISP1_PE3
+ip add 15.0.0.2 255.255.255.252
+no shut
+
+router bgp 30
+neighbor 22.22.22.22 remote-as 30
+neighbor 22.22.22.22 update-source lo0
+neighbor 33.33.33.33 remote-as 30
+neighbor 33.33.33.33 update-source lo0
+network 15.0.0.0 mask 255.255.255.252
+
+
+router bgp 30
+neighbor 15.0.0.1 remote-as 10
+neighbor 15.0.0.1 update-source g0/1
+

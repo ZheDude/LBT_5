@@ -85,6 +85,14 @@ router bgp 10
 network 99.99.99.0 mask 255.255.255.0
 
 
+int g0/2
+ip add 14.0.0.1 255.255.255.252
+no shut
+
+router bgp 10
+neighbor 14.0.0.2 remote-as 30
+neighbor 14.0.0.2 update-source g0/2
+network 14.0.0.0 mask 255.255.255.252
 
 
 

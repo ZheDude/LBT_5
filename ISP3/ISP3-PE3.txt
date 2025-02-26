@@ -1,0 +1,48 @@
+en
+conf t
+hostname ISP3-PE3
+
+int g0/0
+des to_BB
+ip add 192.168.3.2 255.255.255.0
+no shut
+
+router ospf 10
+network 192.168.3.0 0.0.0.255 area 0
+
+
+!###########################
+! DMVPN CONFIG (SPOKE)
+!###########################
+
+interface Tunnel0
+ip address 172.16.0.3 255.255.0.0
+ip nhrp authentication DMVPN
+ip nhrp map 172.16.0.1 192.168.1.2
+ip nhrp map multicast 192.168.1.2
+ip nhrp network-id 1
+ip nhrp nhs 172.16.0.1
+tunnel source GigabitEthernet0/0
+tunnel destination 192.168.1.2
+
+interface Tunnel 0
+ip nhrp shortcut
+
+
+int lo0
+ip add 33.33.33.33 255.255.255.255
+no shut
+
+int Tunnel0 
+ip ospf network point-to-multipoint
+router ospf 10
+network  172.16.0.0 0.0.255.255 area 10
+network  33.33.33.33 0.0.0.0 area 10
+
+
+
+router bgp 30
+neighbor 22.22.22.22 remote-as 30
+neighbor 22.22.22.22 update-source lo0
+neighbor 11.11.11.11 remote-as 30
+neighbor 11.11.11.11 update-source lo0

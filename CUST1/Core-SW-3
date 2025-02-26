@@ -69,7 +69,6 @@ switchport private-vlan mapping 100 101,102
 
 spanning-tree mode rapid-pvst
 
-spanning-tree loopguard default
 
 interface Port-channel1
 switchport trunk encapsulation dot1q
@@ -134,13 +133,50 @@ ip arp inspection trust
 ip dhcp snooping trust
 
 
+
+
+int range g3/1-3
+spanning-tree portfast
+spanning-tree bpduguard
+
+
+int vlan 100
+ip add 192.168.0.3 255.255.255.0
+no shut
+
+ip route 0.0.0.0 0.0.0.0 192.168.0.254
+
+
+aaa new-model
+aaa authentication login default group radius local
+aaa authorization exec default group radius local
+
+radius server Radius1
+address ipv4 192.168.0.15 auth-port 1812 acct-port 1813 
+key SuperGeheim123!
+
+
+line vty 0 15
+login authentication default
+authorization exec default
+transport input ssh
+exit
+radius-server attribute 6 on-for-login-auth
+
+
+
+
 en
 conf t
 vlan 999
 remote-span
-name RSPAN_VLAN
 exit
 
-monitor session 1 source remote vlan 999
-monitor session 1 destination interface gigabitEthernet 3/1
 
+monitor session 1 source remote vlan 999
+monitor session 1 destination interface g3/1
+
+
+int g1/1
+switchport trunk encapsulation dot1q
+switchport mode trunk
