@@ -49,18 +49,10 @@ Certutil -setreg CA\ValidityPeriod "Years"
 Certutil -setreg CA\AuditFilter 127
 
 certutil -setreg CA\CACertPublicationURLs "1:C:\Windows\system32\CertSrv\CertEnroll\%1_%3%4.crt\n2:ldap:///CN=%7,CN=AIA,CN=Public Key Services,CN=Services,%6%11\n2:http://pki.corp.murbal.at/CertEnroll/%1_%3%4.crt"
-
-certutil -setreg CA\CACertPublicationURLs "1:C:\Windows\system32\CertSrv\CertEnroll\%1_%3%4.crt\n2:ldap:///CN=%7,CN=AIA,CN=Public Key Services,CN=Services,%6%11\n2:http://pki.fabrikam.com/CertEnroll/%1_%3%4.crt"
-
 certutil -setreg CA\CRLPublicationURLs "65:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl\n79:ldap:///CN=%7%8,CN=%2,CN=CDP,CN=Public Key Services,CN=Services,%6%10\n6:http://pki.corp.murbal.at/CertEnroll/%3%8%9.crl\n65:file://\\HQ-CA.corp.murbal.at\CertEnroll\%3%8%9.crl"
-
-certutil -setreg CA\CRLPublicationURLs "65:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl\n79:ldap:///CN=%7%8,CN=%2,CN=CDP,CN=Public Key Services,CN=Services,%6%10\n6:http://pki.fabrikam.com/CertEnroll/%3%8%9.crl\n65:file://\\Srv1.fabrikam.com\CertEnroll\%3%8%9.crl"
 
 cd C:\Windows\system32\CertSrv\CertEnroll
 copy .\HQ-CA.corp.murbal.at_corp-HQ-CA-CA.crt C:\pki
 
 restart-service certsvc
 certutil -crl
-#result:
-CertUtol: -CRL command FAILED: 0x800706ba (WIN32: 1722 RPC_S_SERVER_UNAVAILABLE)
-CertUtil: The RPC server is unavailable.
