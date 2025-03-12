@@ -13,3 +13,15 @@ New-NetIPAddress -InterfaceAlias $InterfaceAlias -IPAddress $IP -PrefixLength 24
 Set-DnsClientServerAddress -InterfaceAlias $InterfaceAlias -ServerAddresses ("192.168.0.10")
 
 Install-WindowsFeature -Name AD-Domain-Services, DNS, DHCP -IncludeManagementTools
+
+# AD DC Join
+$DomainName = "corp.murbal.at"
+$SafeModePassword = Read-Host -Prompt "Bitte das DSRM-Kennwort für den AD DS Safe Mode eingeben" -AsSecureString
+$SiteName = "St-Poelten-Office"
+Install-ADDSDomainController -DomainName $DomainName `
+    -SiteName $SiteName `
+    -InstallDns `
+    -Credential (Get-Credential) `
+    -SafeModeAdministratorPassword $SafeModePassword `
+    -Force:$true
+    
