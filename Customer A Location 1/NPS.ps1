@@ -17,7 +17,7 @@ $DomainCreds = Get-Credential -Message "Bitte die Anmeldeinformationen eines Dom
 Add-Computer -DomainName $DomainName -Credential $DomainCreds -Restart
 
 # Konfiguration des NPS
-Mit netsh nps sollen nur Clients angelegt werden. die Definition der Policies erfolgt über die GUI
+# Mit netsh nps sollen nur Clients angelegt werden. die Definition der Policies erfolgt über die GUI, da dieser über cmd sehr komplex ist
 netsh
 nps
 # Fortigate
